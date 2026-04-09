@@ -1,22 +1,23 @@
-# app.py completo y final
+# app.py final con el mensaje completo y fuentes bonitas
 
 from flask import Flask
 import os
 
 app = Flask(__name__)
 
-# Aquí integramos tu diseño definitivo
+# Diseño definitivo del "Árbol Redondo Progressivo y Lluvia con Mensaje Especial"
 html_content = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro Árbol Redondo Progressivo y Lluvia 💖</title>
+<title>Nuestro Árbol del Amor con Mensaje Especial 💖</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
@@ -118,7 +119,7 @@ html_content = """
     .heart-rain::before { top: -7.5px; left: 0; }
     .heart-rain::after { left: 7.5px; top: 0; }
 
-    /* TEXTO CON EL CONTADOR - Aparece al final */
+    /* TEXTO CON EL MENSAJE ESPECIAL Y CONTADOR - Aparece al final */
     .text-overlay {
         color: white;
         margin-top: 20px;
@@ -136,7 +137,7 @@ html_content = """
         opacity: 1;
     }
 
-    /* MENSAJE PRINCIPAL - Con fuente cursiva bonita */
+    /* TÍTULO PRINCIPAL (Bonito) */
     .text-overlay h2 {
         font-family: 'Dancing Script', cursive; /* APLICAMOS FUENTE BONITA */
         font-size: 2.2rem;
@@ -144,11 +145,29 @@ html_content = """
         margin: 0;
     }
 
+    /* MENSAJE ESPECIAL (Cursivo/Poético) */
+    .special-message {
+        font-family: 'Playfair Display', serif; /* FUENTE POÉTICA */
+        font-style: italic;
+        font-size: 1.2rem;
+        color: #ffb3c1;
+        margin: 20px 0;
+        line-height: 1.6;
+        opacity: 0;
+        transition: opacity 1.5s ease-in;
+        transition-delay: 1.5s; /* Aparece justo después del título */
+    }
+
+    .text-overlay.visible .special-message {
+        opacity: 1;
+    }
+
     /* CONTADOR - Con fuente legible */
     #time {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 300;
-        margin-top: 10px;
+        margin-top: 15px;
+        font-family: 'Poppins', sans-serif;
     }
 
     /* ANIMACIONES */
@@ -179,6 +198,13 @@ html_content = """
     
     <div class="text-overlay" id="text-overlay">
         <h2>Nuestra historia... 💖</h2>
+        
+        <div class="special-message">
+            para el amor de mi vida:<br>
+            si pudiera elegir un lugar, seria a tu lado.<br>
+            Cuanto mas tiempo estoy contigo mas te amo.
+        </div>
+        
         <div id="time"></div>
     </div>
 </div>
@@ -205,7 +231,7 @@ html_content = """
         heart.classList.add('heart-tree');
         
         // --- LÓGICA DE DISTRIBUCIÓN ESFÉRICA PERFECTA (COPA REDONDA) ---
-        // Radio de la copa (iguala al tamaño de .tree-top, ajustable si quieres)
+        // Radio de la copa (iguala al tamaño de .tree-top)
         const radiusCopa = 150; 
         
         // Lógica de crecimiento ascendente (nace desde abajo)
