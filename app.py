@@ -1,15 +1,24 @@
+# app.py completo y final
+
 from flask import Flask
 import os
 
 app = Flask(__name__)
 
+# Aquí integramos tu diseño definitivo
 html_content = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro Árbol del Amor Progressivo 💖</title>
+<title>Nuestro Árbol Redondo Progressivo y Lluvia 💖</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
 <style>
     body {
         margin: 0;
@@ -18,7 +27,6 @@ html_content = """
         align-items: center;
         justify-content: center;
         background-color: #000; /* Fondo negro para máximo contraste */
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         overflow: hidden;
     }
 
@@ -26,20 +34,21 @@ html_content = """
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
         max-width: 500px;
+        position: relative;
     }
 
-    /* EL ÁRBOL */
-    .tree {
+    /* EL ÁRBOL - Contenedor Principal */
+    .tree-container {
         position: relative;
         width: 320px;
         height: 400px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end; /* Para que el tronco esté abajo */
+        justify-content: flex-end; /* Tronco abajo */
     }
 
     /* TRONCO - Aparece primero */
@@ -52,19 +61,19 @@ html_content = """
         z-index: 1;
         opacity: 0;
         animation: fadeIn 1s ease-in forwards;
-        animation-delay: 0.5s; /* Empieza a aparecer a los 0.5s */
+        animation-delay: 0.5s;
     }
 
-    /* COPA DEL ÁRBOL - Contenedor invisible al inicio */
+    /* COPA DEL ÁRBOL - Contenedor invisible al inicio (SOBRE EL TRONCO) */
     .tree-top {
         position: absolute;
-        bottom: 90px; /* Justo sobre el tronco */
-        width: 100%;
-        height: 300px;
+        bottom: 85px; /* Un poco sobre el tronco */
+        width: 300px; /* Diámetro de la copa */
+        height: 300px; /* Altura de la copa (iguala al diámetro para ser esférica) */
     }
 
-    /* CORAZÓN INDIVIDUAL */
-    .heart {
+    /* CORAZÓN INDIVIDUAL (Copa) */
+    .heart-tree {
         position: absolute;
         width: 20px;
         height: 20px;
@@ -74,7 +83,7 @@ html_content = """
         animation: heartGrow 1.5s ease-out forwards;
     }
 
-    .heart::before, .heart::after {
+    .heart-tree::before, .heart-tree::after {
         content: '';
         position: absolute;
         width: 20px;
@@ -83,17 +92,43 @@ html_content = """
         border-radius: 50%;
     }
 
-    .heart::before { top: -10px; left: 0; }
-    .heart::after { left: 10px; top: 0; }
+    .heart-tree::before { top: -10px; left: 0; }
+    .heart-tree::after { left: 10px; top: 0; }
+
+    /* CORAZÓN LLUVIA (Por toda la pantalla) */
+    .heart-rain {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: #ff0055;
+        transform: rotate(-45deg);
+        opacity: 0.8;
+        animation: heartRainFall linear forwards;
+    }
+
+    .heart-rain::before, .heart-rain::after {
+        content: '';
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: inherit;
+        border-radius: 50%;
+    }
+
+    .heart-rain::before { top: -7.5px; left: 0; }
+    .heart-rain::after { left: 7.5px; top: 0; }
 
     /* TEXTO CON EL CONTADOR - Aparece al final */
     .text-overlay {
         color: white;
-        margin-top: 30px;
+        margin-top: 20px;
         text-align: center;
         opacity: 0; /* Invisible al inicio */
         text-shadow: 0 0 15px rgba(255, 77, 136, 0.8);
         transition: opacity 2s ease-in; /* Transición suave */
+        position: relative;
+        width: 100%;
+        font-family: 'Poppins', sans-serif;
     }
 
     /* Clase para mostrar el texto al final */
@@ -101,9 +136,18 @@ html_content = """
         opacity: 1;
     }
 
+    /* MENSAJE PRINCIPAL - Con fuente cursiva bonita */
+    .text-overlay h2 {
+        font-family: 'Dancing Script', cursive; /* APLICAMOS FUENTE BONITA */
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    /* CONTADOR - Con fuente legible */
     #time {
-        font-size: 1.3rem;
-        font-weight: bold;
+        font-size: 1.2rem;
+        font-weight: 300;
         margin-top: 10px;
     }
 
@@ -118,12 +162,17 @@ html_content = """
         15% { opacity: 1; }
         100% { transform: rotate(-45deg) scale(1); opacity: 0.9; }
     }
+
+    @keyframes heartRainFall {
+        0% { transform: translateY(-50px) rotate(-45deg); opacity: 0.8; }
+        100% { transform: translateY(110vh) rotate(-45deg); opacity: 0; }
+    }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="tree">
+    <div class="tree-container">
         <div class="tree-top" id="tree-top"></div>
         <div class="trunk"></div>
     </div>
@@ -140,52 +189,54 @@ html_content = """
     const colors = ['#ff0033', '#ff0055', '#ff3377', '#ff6699', '#fb6f92'];
 
     // Configuración de la animación progresiva
-    const TOTAL_HEARTS = 250; // Corazones totales para formar el árbol
+    const TOTAL_HEARTS = 300; // Corazones totales para formar el árbol
     const INTERVAL_MS = 100; // Un corazón cada 100ms
-    const TEXT_DELAY_MS = 25000; // Esperar 25 segundos antes de mostrar el texto
+    const TEXT_DELAY_MS = 28000; // Esperar 28 segundos antes de mostrar el texto (ajustable)
 
     let heartsCreated = 0;
 
-    function createHeart() {
+    function createTreeHeart() {
         if (heartsCreated >= TOTAL_HEARTS) {
             clearInterval(heartInterval);
             return;
         }
 
         const heart = document.createElement('div');
-        heart.classList.add('heart');
+        heart.classList.add('heart-tree');
         
-        // 1. LÓGICA DE CRECIMIENTO ASCENDENTE (EL ÁRBOL NACE DESDE ABAJO)
+        // --- LÓGICA DE DISTRIBUCIÓN ESFÉRICA PERFECTA (COPA REDONDA) ---
+        // Radio de la copa (iguala al tamaño de .tree-top, ajustable si quieres)
+        const radiusCopa = 150; 
+        
+        // Lógica de crecimiento ascendente (nace desde abajo)
         const currentProgress = heartsCreated / TOTAL_HEARTS; // Valor de 0 a 1
         
-        // El radio máximo de la copa del árbol (se expande con el tiempo)
-        const maxRadius = 130;
-        
-        // Usamos currentProgress para que los primeros corazones (y=0)
-        // estén más cerca del tronco, y los últimos (y=1) formen la cima.
-        
-        // Posicionamiento circular que se expande hacia arriba
+        // 1. Calculamos la altura (Y) progresivamente, pero dentro de la esfera
+        const baseY = 280; 
+        const heightFactor = 2 * radiusCopa; // Diámetro
+        const y_esfera = (baseY - radiusCopa) + radiusCopa - (heightFactor * currentProgress); 
+
+        // 2. Calculamos el Radio X Máximo en esta altura Y (Fórmula de la Esfera)
+        const yRelativaCentroEsfera = y_esfera - (baseY - radiusCopa); 
+        const maxRadiusX = Math.sqrt(Math.pow(radiusCopa, 2) - Math.pow(yRelativaCentroEsfera, 2));
+
+        // 3. Posicionamiento Aleatorio Circular pero acotado por maxRadiusX
         const angle = Math.random() * Math.PI * 2;
         
-        // Radio aleatorio, pero el máximo aumenta con el progreso
-        const radius = Math.random() * maxRadius * currentProgress; 
+        // Radio real X se acota para no salir de la esfera
+        const randomRadiusFactor = Math.random() * 0.9; 
+        const actualRadiusX = maxRadiusX * randomRadiusFactor;
         
-        const x = Math.cos(angle) * radius + 160; // Centro X (mitad de la copa)
-        
-        // La altura (Y) se calcula progresivamente desde abajo (0) hacia arriba (300)
-        // Agregamos un poco de aleatoriedad para naturalidad
-        const baseY = 280; // Altura base (justo sobre el tronco)
-        const maxTreeHeight = 250;
-        const heightVariation = Math.random() * 50; // Variación aleatoria
-        
-        // Calculamos Y: empieza cerca de baseY y sube (resta) hasta la cima
-        const y = baseY - (maxTreeHeight * currentProgress) - heightVariation;
+        // Coordenadas Finales
+        const x_final = (radiusCopa) + Math.cos(angle) * actualRadiusX; 
+        const y_final = y_esfera;
 
-        heart.style.left = `${x}px`;
-        heart.style.top = `${y}px`;
+        // --- APLICAMOS COORDENADAS ---
+        heart.style.left = `${x_final}px`;
+        heart.style.top = `${y_final}px`;
         heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         
-        // Tamaño aleatorio para naturalidad (algunos pequeños, otros medianos)
+        // Tamaño aleatorio para naturalidad
         const size = Math.random() * 12 + 10;
         heart.style.width = `${size}px`;
         heart.style.height = `${size}px`;
@@ -194,13 +245,40 @@ html_content = """
         heartsCreated++;
     }
 
-    // 2. INICIAMOS LA CREACIÓN PROGRESIVA DE CORAZONES (EL ÁRBOL NACE)
+    // --- LLUVIA DE CORAZONES POR TODA LA PANTALLA ---
+    function createRainHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-rain');
+        
+        // Posicionamiento horizontal aleatorio por todo el ancho de la pantalla
+        heart.style.left = Math.random() * 100 + 'vw';
+        
+        // Color aleatorio
+        heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Velocidad aleatoria para naturalidad (caída entre 3 y 6 segundos)
+        const fallDuration = Math.random() * 3 + 3;
+        heart.style.animationDuration = `${fallDuration}s`;
+
+        document.body.appendChild(heart);
+
+        // Eliminamos el corazón cuando termina su caída para no saturar la memoria
+        setTimeout(() => {
+            heart.remove();
+        }, fallDuration * 1000);
+    }
+
+    // --- INICIAMOS LA CREACIÓN PROGRESIVA DE CORAZONES (EL ÁRBOL NACE) ---
     // Esperamos 1.5s para que el tronco se muestre primero
     setTimeout(() => {
-        const heartInterval = setInterval(createHeart, INTERVAL_MS);
+        const heartInterval = setInterval(createTreeHeart, INTERVAL_MS);
     }, 1500);
 
-    // 3. LÓGICA DEL TEXTO DIFERIDO (LAS LETRAS SALEN AL FINAL)
+    // --- INICIAMOS LA LLUVIA DE CORAZONES ---
+    // Un corazón de lluvia cada 400ms
+    setInterval(createRainHeart, 400);
+
+    // --- LÓGICA DEL TEXTO DIFERIDO (LAS LETRAS SALEN AL FINAL) ---
     // Mostramos el texto después del retraso configurado
     setTimeout(() => {
         textOverlay.classList.add('visible');
