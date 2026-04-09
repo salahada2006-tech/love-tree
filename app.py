@@ -1,22 +1,23 @@
-# app.py completo y final: Árbol Realista con Copa de Corazón Perfecta y Ambiente
+# app.py final y estable: Tronco Sencillo, Copa de Corazón y Ambiente Completo ❤️
 
 from flask import Flask
 import os
 
 app = Flask(__name__)
 
-# Diseño definitivo del "Árbol del Corazón Realista, Ambiente y Texto Fucsia"
+# Diseño definitivo del "Árbol con Tronco Sencillo y Ambiente Romántico"
 html_content = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuestro Árbol del Corazón Perfecto ❤️ | Historia Fucsia</title>
+<title>Nuestro Árbol del Corazón con Ambiente ❤️</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
@@ -24,9 +25,10 @@ html_content = """
         margin: 0;
         height: 100vh;
         display: flex;
+        flex-direction: column; /* Alineación vertical */
         align-items: center;
         justify-content: center;
-        /* --- FONDO AZULITO --- */
+        /* --- FONDO AZULITO (Como en image_11.png) --- */
         background: linear-gradient(135deg, #a7d8f5 0%, #d8effb 100%); 
         overflow: hidden;
         position: relative;
@@ -54,53 +56,51 @@ html_content = """
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: flex-start;
         width: 100%;
-        max-width: 600px;
+        max-width: 500px;
         position: relative;
         z-index: 5; /* Por encima de las nubes y la lluvia */
     }
 
-    /* EL ÁRBOL - Contenedor Principal (Como en image_8.png) */
+    /* --- EL ÁRBOL - Contenedor Principal (Como en image_11.png) --- */
     .tree-container {
         position: relative;
-        width: 500px; /* Ancho para el árbol realista */
-        height: 550px; /* Altura total del árbol */
+        width: 300px; /* Ancho para la copa de image_11 */
+        height: 400px; /* Altura total */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-end; /* Tronco abajo */
     }
 
-    /* --- TRONCO REALISTA CON RAMAS (SVG) - Recuperado y Mejorado --- */
-    .tree-svg {
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        height: 100%;
-        z-index: 2; /* Por encima de la copa invisible */
+    /* --- TRONCO SENCILLO Y RECTO (Recuperado de image_11.png) --- */
+    .trunk-sencillo {
+        width: 16px; /* Como en image_11 */
+        height: 100px; /* Altura del tronco */
+        background: linear-gradient(to right, #4d2600, #a0522d, #4d2600);
+        border-radius: 8px; /* Contorno suave */
+        position: relative;
+        z-index: 2; /* Los corazones aparecen entre el tronco */
         opacity: 0;
-        animation: fadeInTree 2s ease-in forwards;
+        animation: fadeIn 1s ease-in forwards;
         animation-delay: 0.5s; /* Aparece primero */
     }
-    .tree-svg path {
-        fill: #5D4037; /* Color café más realista */
-    }
 
-    /* COPA DEL ÁRBOL EN FORMA DE CORAZÓN PERFECTO */
+    /* COPA DEL ÁRBOL - Contenedor invisible al inicio (SOBRE EL TRONCO) */
+    /* Mantenemos la lógica de image_8.png para que sea un corazón perfecto */
     .tree-top {
         position: absolute;
-        top: 20px; /* Cerca del final de las ramas */
-        width: 450px; /* Copa grande */
-        height: 450px;
+        bottom: 85px; /* Un poco sobre el tronco */
+        width: 300px; /* Diámetro de la copa */
+        height: 300px; /* Altura de la copa */
     }
 
     /* CORAZÓN INDIVIDUAL (Copa) */
     .heart-tree {
         position: absolute;
-        width: 18px; /* Un poco más pequeños para definición */
-        height: 18px;
+        width: 20px;
+        height: 20px;
         background: #ff0055; /* Color rojo vibrante */
         transform: rotate(-45deg) scale(0);
         opacity: 0;
@@ -110,14 +110,14 @@ html_content = """
     .heart-tree::before, .heart-tree::after {
         content: '';
         position: absolute;
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         background: inherit;
         border-radius: 50%;
     }
 
-    .heart-tree::before { top: -9px; left: 0; }
-    .heart-tree::after { left: 9px; top: 0; }
+    .heart-tree::before { top: -10px; left: 0; }
+    .heart-tree::after { left: 10px; top: 0; }
 
     /* --- LLUVIA DE CORAZONES POR TODA LA PANTALLA - Recuperada --- */
     .heart-rain {
@@ -145,13 +145,14 @@ html_content = """
 
     /* TEXTO CON MENSAJE ESPECIAL Y CONTADOR - ¡HACER RESALTAR EN FUCSIA! */
     .text-overlay {
-        margin-top: -30px; /* Un poco más cerca del árbol */
+        margin-top: 10px;
         text-align: center;
         opacity: 0; /* Invisible al inicio */
         transition: opacity 2s ease-in; /* Transición suave */
-        font-family: 'Poppins', sans-serif;
+        position: relative;
         width: 100%;
-        z-index: 10; /* Por encima de todo */
+        font-family: 'Poppins', sans-serif;
+        z-index: 10;
     }
 
     /* Clase para mostrar el texto al final */
@@ -159,51 +160,48 @@ html_content = """
         opacity: 1;
     }
 
-    /* MENSAJE PRINCIPAL - ¡HACER RESALTAR EN FUCSIA! */
+    /* TÍTULO PRINCIPAL BONITO Y LEGIBLE FUCSIA */
     .text-overlay h2 {
-        font-family: 'Dancing Script', cursive; /* APLICAMOS FUENTE BONITA */
+        font-family: 'Dancing Script', cursive; /* APLICAMOS FUENTE BONITA Y LEGIBLE */
         font-size: 2.8rem;
-        font-weight: 700;
+        font-weight: 700; /* ¡¡NEGRILLA!! para resaltar */
         margin: 0;
         
-        /* --- ¡¡TEXTO FUCSIA VIBRANTE!! --- */
+        /* --- ¡¡TEXTO FUCSIA VIBRANTE!! (Como en image_11) --- */
         color: #ff007f; /* Color fucsia */
         text-shadow: 0 0 10px rgba(255, 0, 127, 0.5); /* Contorno fucsia suave */
     }
 
-    /* MENSAJE ESPECIAL - ¡HACER RESALTAR! */
+    /* MENSAJE ESPECIAL POÉTICO Y LEGIBLE */
     .special-message {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 300;
-        
-        /* --- ¡¡TEXTO FUCSIA VIBRANTE!! --- */
-        color: #ff007f;
-        
+        font-family: 'Playfair Display', serif; /* FUENTE POÉTICA */
+        font-style: italic;
+        font-size: 1.2rem;
+        color: #ff007f; /* Fucsia */
         margin: 15px 0;
         line-height: 1.6;
-        text-shadow: 0 0 5px rgba(255, 0, 127, 0.3); /* Contorno fucsia suave */
+        text-shadow: 0 0 8px rgba(255, 0, 127, 0.3); /* Contorno suave */
     }
 
     /* CONTADOR - Con fuente legible */
     #time {
-        font-family: 'Poppins', sans-serif;
         font-size: 1.1rem;
         font-weight: 300;
         margin-top: 15px;
+        font-family: 'Poppins', sans-serif;
         color: #ff007f; /* Fucsia */
     }
 
     /* ANIMACIONES */
-    @keyframes fadeInTree {
-        from { opacity: 0; transform: translate(-50%, 20px); }
-        to { opacity: 1; transform: translate(-50%, 0); }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes heartGrow {
         0% { transform: rotate(-45deg) scale(0); opacity: 0; }
         15% { opacity: 1; }
-        100% { transform: rotate(-45deg) scale(1); opacity: 0.95; }
+        100% { transform: rotate(-45deg) scale(1); opacity: 0.9; }
     }
 
     @keyframes heartRainFall {
@@ -226,9 +224,7 @@ html_content = """
 
 <div class="container">
     <div class="tree-container">
-        <svg class="tree-svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
-            <path d="M300,580 C290,500 280,480 270,450 S250,400 240,380 C230,360 210,340 180,330 S150,300 130,280 C110,260 90,230 100,200 C110,170 140,150 170,160 S200,190 220,210 C240,230 260,250 280,260 C300,270 320,260 340,250 C360,240 380,220 400,200 C420,180 440,160 470,170 C500,180 520,210 510,240 C500,270 480,290 460,310 S430,330 400,340 C370,350 350,370 340,390 C330,410 320,440 310,470 S305,520 300,580 Z M320,280 C330,270 340,260 350,250 S370,230 390,220 C410,210 430,190 450,200 S470,220 460,240 C450,260 430,280 410,290 S390,300 370,310 C350,320 330,300 320,280 Z M280,280 C270,270 260,260 250,250 S230,230 210,220 C190,210 170,190 150,200 S130,220 140,240 C150,260 170,280 190,290 S210,300 230,310 C250,320 270,300 280,280 Z"/>
-        </svg>
+        <div class="trunk-sencillo"></div>
         <div class="tree-top" id="tree-top"></div>
     </div>
     
@@ -251,24 +247,13 @@ html_content = """
     const colors = ['#ff0033', '#ff0055', '#ff3377', '#ff6699', '#fb6f92'];
 
     // Configuración de la animación progresiva
-    const TOTAL_HEARTS = 380; // Más corazones para una copa muy frondosa
+    const TOTAL_HEARTS = 300; // Corazones totales para formar el árbol
     const INTERVAL_MS = 100; // Un corazón cada 100ms
-    const TEXT_DELAY_MS = 32000; // Esperar 32 segundos antes de mostrar el texto (ajustable)
+    const TEXT_DELAY_MS = 28000; // Esperar 28 segundos antes de mostrar el texto (ajustable)
 
     let heartsCreated = 0;
 
-    // --- GEOMETRÍA DEL CORAZÓN (Fórmula Paramétrica) - Recuperada ---
-    const scaleFactor = 14; // Escala del corazón
-    
-    // Función para obtener las coordenadas X e Y en forma de corazón
-    function getHeartPoint(t) {
-        // Fórmula matemática del corazón (ajustada para que esté boca arriba)
-        let x = scaleFactor * (16 * Math.pow(Math.sin(t), 3));
-        let y = -scaleFactor * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        return { x, y };
-    }
-
-    function createTreeHeart() {
+    function createHeart() {
         if (heartsCreated >= TOTAL_HEARTS) {
             clearInterval(heartInterval);
             return;
@@ -277,55 +262,40 @@ html_content = """
         const heart = document.createElement('div');
         heart.classList.add('heart-tree');
         
-        // --- POSICIONAMIENTO DENTRO DEL CORAZÓN ---
-        // 't' va de 0 a 2*PI para trazar el perímetro
-        const t = Math.random() * Math.PI * 2; 
-        const pointPerimetro = getHeartPoint(t);
-        
-        // Para rellenar el interior, multiplicamos por un factor aleatorio (0 a 1)
-        // Usamos Math.sqrt para una distribución más uniforme en el centro
-        const randomRadiusFactor = Math.sqrt(Math.random()); 
-        
-        // Centro de la copa (.tree-top)
-        const centerX = 225; 
-        const centerY = 200; // Ajustado para que el centro del corazón esté bien ubicado
-
-        // Coordenadas Finales acotadas por el factor aleatorio
-        // En el eje Y, el progreso (heartsCreated) nos ayuda a "nacer desde abajo"
-        const progressY = heartsCreated / TOTAL_HEARTS;
-        // yRelativa va de baseY (radius) a -radius. Usamos Math.pow para subir rápido al principio.
-        const baseY = centerY + (scaleFactor * 17); // Punto más bajo del corazón
-        const heightY = (scaleFactor * 34); // Altura total
-        const actualY = baseY - (heightY * Math.pow(progressY, 0.8)); // Crecimiento progresivo
-
-        // Ahora acotamos X según esta Y (x² = r² - y²) - para que sea redondo perfecto
-        const yRelativaCentro = actualY - centerY;
-        // maxRadiusX es la "anchura" máxima en esta Y dentro del corazón paramétrico
-        // Es un cálculo complejo, así que aproximamos con la anchura del corazón en image_8.png
+        // --- LÓGICA DE DISTRIBUCIÓN ESFÉRICA PERFECTA (COPA REDONDA de image_8) ---
+        // Radio de la copa (mitad del diámetro de .tree-top)
         const radiusCopa = 150; 
-        const maxRadiusX_approx = Math.sqrt(Math.pow(radiusCopa, 2) - Math.pow(yRelativaCentro, 2));
+        
+        // Lógica de crecimiento ascendente (nace desde abajo)
+        const currentProgress = heartsCreated / TOTAL_HEARTS; // Valor de 0 a 1
+        
+        // 1. Calculamos la altura (Y) progresivamente, pero dentro de la esfera
+        const baseY = 280; 
+        const heightFactor = 2 * radiusCopa; // Diámetro
+        const y_esfera = (baseY - radiusCopa) + radiusCopa - (heightFactor * currentProgress); 
 
-        // Si maxRadiusX_approx no es un número (Y fuera del radio esférico), no dibujamos
-        if (isNaN(maxRadiusX_approx) && progressY < 0.8) {
-             heartsCreated++; // Incrementamos para no quedarnos atascados
-             return;
-        }
+        // 2. Calculamos el Radio X Máximo en esta altura Y (Fórmula de la Esfera)
+        const yRelativaCentroEsfera = y_esfera - (baseY - radiusCopa); 
+        const maxRadiusX = Math.sqrt(Math.pow(radiusCopa, 2) - Math.pow(yRelativaCentroEsfera, 2));
 
+        // 3. Posicionamiento Aleatorio Circular pero acotado por maxRadiusX
         const angle = Math.random() * Math.PI * 2;
         
-        // Para asegurar que estamos dentro del corazón gigante paramétrico,
-        // acotamos el radio aleatorio por maxRadiusX_approx.
-        // Agregamos un poco de aleatoriedad para naturalidad, pero con maxRadiusX
-        const randomRadiusX_final = Math.random() * Math.max(maxRadiusX_approx, 10) * 0.95; 
+        // Radio real X se acota para no salir de la esfera
+        const randomRadiusFactor = Math.random() * 0.9; 
+        const actualRadiusX = maxRadiusX * randomRadiusFactor;
         
-        const finalX = centerX + Math.cos(angle) * randomRadiusX_final;
-        const finalY = actualY;
+        // Coordenadas Finales
+        const x_final = (radiusCopa) + Math.cos(angle) * actualRadiusX; 
+        const y_final = y_esfera;
 
-        heart.style.left = `${finalX - 9}px`; // Centramos el corazón (9px is half of 18px)
-        heart.style.top = `${finalY - 9}px`;
+        // --- APLICAMOS COORDENADAS ---
+        heart.style.left = `${x_final}px`;
+        heart.style.top = `${y_final}px`;
         heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         
-        const size = Math.random() * 10 + 14; // Variación de tamaño para naturalidad
+        // Tamaño aleatorio para naturalidad
+        const size = Math.random() * 12 + 10;
         heart.style.width = `${size}px`;
         heart.style.height = `${size}px`;
 
@@ -333,7 +303,7 @@ html_content = """
         heartsCreated++;
     }
 
-    // --- LLUVIA DE CORAZONES DESDE ARRIBA - Recuperada y Mejorada ---
+    // --- LLUVIA DE CORAZONES POR TODA LA PANTALLA ---
     function createRainHeart() {
         const heart = document.createElement('div');
         heart.classList.add('heart-rain');
@@ -344,8 +314,8 @@ html_content = """
         // Color aleatorio
         heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         
-        // Velocidad aleatoria para naturalidad (caída entre 4 y 7 segundos)
-        const fallDuration = Math.random() * 3 + 4;
+        // Velocidad aleatoria para naturalidad (caída entre 3 y 6 segundos)
+        const fallDuration = Math.random() * 3 + 3;
         heart.style.animationDuration = `${fallDuration}s`;
 
         document.body.appendChild(heart);
@@ -357,14 +327,13 @@ html_content = """
     }
 
     // --- INICIAMOS LA CREACIÓN PROGRESIVA DE CORAZONES (EL ÁRBOL NACE) ---
-    // Esperamos 2.5s para que se muestre el tronco realista
+    // Esperamos 1.5s para que el tronco se muestre primero
     setTimeout(() => {
-        const heartInterval = setInterval(createTreeHeart, 80); // Un corazón cada 80ms
-    }, 2500);
+        const heartInterval = setInterval(createHeart, INTERVAL_MS);
+    }, 1500);
 
-    // --- INICIAMOS LA LLUVIA DE CORAZONES - Recuperada y Mejorada ---
-    // Un corazón de lluvia cada 450ms
-    setInterval(createRainHeart, 450);
+    // --- INICIAMOS LA LLUVIA DE CORAZONES ---
+    setInterval(createRainHeart, 400);
 
     // --- LÓGICA DEL TEXTO DIFERIDO (LAS LETRAS SALEN AL FINAL) ---
     // Mostramos el texto después del retraso configurado
