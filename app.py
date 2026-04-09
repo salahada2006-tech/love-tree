@@ -1,11 +1,11 @@
-# app.py completo y final: Árbol del Amor Perfecto con Texto Fucsia Vibrante
+# app.py completo y final: Árbol Realista con Copa de Corazón Perfecta y Ambiente
 
 from flask import Flask
 import os
 
 app = Flask(__name__)
 
-# Diseño definitivo del "Árbol del Amor Progressivo y Legible con Texto Fucsia"
+# Diseño definitivo del "Árbol del Corazón Realista, Ambiente y Texto Fucsia"
 html_content = """
 <!DOCTYPE html>
 <html lang="es">
@@ -24,12 +24,30 @@ html_content = """
         margin: 0;
         height: 100vh;
         display: flex;
-        flex-direction: column; /* Alineación vertical para bajar el texto */
         align-items: center;
         justify-content: center;
-        /* FONDO AZULITO (de tu imagen 9) */
+        /* --- FONDO AZULITO --- */
         background: linear-gradient(135deg, #a7d8f5 0%, #d8effb 100%); 
         overflow: hidden;
+        position: relative;
+    }
+
+    /* --- NUBES EN FORMA DE CORAZÓN (SVG) - Recuperadas --- */
+    .nube-corazon {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        opacity: 0.5; /* Suave */
+        animation: moverNubes 60s linear infinite;
+        z-index: 1;
+    }
+    .nube-corazon path {
+        fill: white;
+    }
+
+    @keyframes moverNubes {
+        0% { transform: translateX(-150px); }
+        100% { transform: translateX(calc(100vw + 150px)); }
     }
 
     .container {
@@ -39,12 +57,13 @@ html_content = """
         width: 100%;
         max-width: 600px;
         position: relative;
+        z-index: 5; /* Por encima de las nubes y la lluvia */
     }
 
     /* EL ÁRBOL - Contenedor Principal (Como en image_8.png) */
     .tree-container {
         position: relative;
-        width: 450px; /* Diámetro de la copa */
+        width: 500px; /* Ancho para el árbol realista */
         height: 550px; /* Altura total del árbol */
         display: flex;
         flex-direction: column;
@@ -52,34 +71,36 @@ html_content = """
         justify-content: flex-end; /* Tronco abajo */
     }
 
-    /* TRONCO REALISTA CON RAMAS (Como en image_7.png) */
-    .tree-trunk {
-        width: 18px;
-        height: 120px;
-        background: linear-gradient(to right, #4d2600, #a0522d, #4d2600);
-        border-radius: 8px;
-        position: relative;
-        z-index: 1; /* Los corazones aparecen entre las ramas */
+    /* --- TRONCO REALISTA CON RAMAS (SVG) - Recuperado y Mejorado --- */
+    .tree-svg {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 100%;
+        z-index: 2; /* Por encima de la copa invisible */
         opacity: 0;
         animation: fadeInTree 2s ease-in forwards;
-        animation-delay: 0.5s;
+        animation-delay: 0.5s; /* Aparece primero */
+    }
+    .tree-svg path {
+        fill: #5D4037; /* Color café más realista */
     }
 
-    /* COPA DEL ÁRBOL - Contenedor invisible al inicio (SOBRE EL TRONCO) */
-    /* Usamos la forma de la copa de image_8.png para que sea un corazón perfecto */
+    /* COPA DEL ÁRBOL EN FORMA DE CORAZÓN PERFECTO */
     .tree-top {
         position: absolute;
-        bottom: 110px; /* Un poco sobre el tronco */
-        width: 450px; /* Ancho de la copa */
-        height: 450px; /* Altura de la copa (Círculo perfecto) */
-        border-radius: 50%;
+        top: 20px; /* Cerca del final de las ramas */
+        width: 450px; /* Copa grande */
+        height: 450px;
     }
 
     /* CORAZÓN INDIVIDUAL (Copa) */
     .heart-tree {
         position: absolute;
-        width: 22px; /* Un poquito más grandes para que sean visibles */
-        height: 22px;
+        width: 18px; /* Un poco más pequeños para definición */
+        height: 18px;
         background: #ff0055; /* Color rojo vibrante */
         transform: rotate(-45deg) scale(0);
         opacity: 0;
@@ -89,16 +110,40 @@ html_content = """
     .heart-tree::before, .heart-tree::after {
         content: '';
         position: absolute;
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
         background: inherit;
         border-radius: 50%;
     }
 
-    .heart-tree::before { top: -11px; left: 0; }
-    .heart-tree::after { left: 11px; top: 0; }
+    .heart-tree::before { top: -9px; left: 0; }
+    .heart-tree::after { left: 9px; top: 0; }
 
-    /* TEXTO CON MENSAJE ESPECIAL Y CONTADOR - ¡HACER RESALTAR! */
+    /* --- LLUVIA DE CORAZONES POR TODA LA PANTALLA - Recuperada --- */
+    .heart-rain {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #ff0055;
+        transform: rotate(-45deg);
+        opacity: 0.8;
+        animation: heartRainFall linear forwards;
+        z-index: 3;
+    }
+
+    .heart-rain::before, .heart-rain::after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: inherit;
+        border-radius: 50%;
+    }
+
+    .heart-rain::before { top: -6px; left: 0; }
+    .heart-rain::after { left: 6px; top: 0; }
+
+    /* TEXTO CON MENSAJE ESPECIAL Y CONTADOR - ¡HACER RESALTAR EN FUCSIA! */
     .text-overlay {
         margin-top: -30px; /* Un poco más cerca del árbol */
         text-align: center;
@@ -121,7 +166,7 @@ html_content = """
         font-weight: 700;
         margin: 0;
         
-        /* --- ¡¡TEXTO FUCSIA VIBRANTE!! (Como pediste) --- */
+        /* --- ¡¡TEXTO FUCSIA VIBRANTE!! --- */
         color: #ff007f; /* Color fucsia */
         text-shadow: 0 0 10px rgba(255, 0, 127, 0.5); /* Contorno fucsia suave */
     }
@@ -151,23 +196,40 @@ html_content = """
 
     /* ANIMACIONES */
     @keyframes fadeInTree {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
     }
 
     @keyframes heartGrow {
         0% { transform: rotate(-45deg) scale(0); opacity: 0; }
         15% { opacity: 1; }
-        100% { transform: rotate(-45deg) scale(1); opacity: 0.9; }
+        100% { transform: rotate(-45deg) scale(1); opacity: 0.95; }
+    }
+
+    @keyframes heartRainFall {
+        0% { transform: translateY(-50px) rotate(-45deg); opacity: 0.8; }
+        100% { transform: translateY(110vh) rotate(-45deg); opacity: 0; }
     }
 </style>
 </head>
 <body>
 
+<svg class="nube-corazon" style="top: 5vh; animation-delay: 0s;" viewBox="0 0 512 512">
+    <path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/>
+</svg>
+<svg class="nube-corazon" style="top: 25vh; animation-delay: -20s; width: 100px; height: 100px;" viewBox="0 0 512 512">
+    <path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/>
+</svg>
+<svg class="nube-corazon" style="top: 15vh; animation-delay: -40s; width: 80px; height: 80px;" viewBox="0 0 512 512">
+    <path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/>
+</svg>
+
 <div class="container">
     <div class="tree-container">
+        <svg class="tree-svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+            <path d="M300,580 C290,500 280,480 270,450 S250,400 240,380 C230,360 210,340 180,330 S150,300 130,280 C110,260 90,230 100,200 C110,170 140,150 170,160 S200,190 220,210 C240,230 260,250 280,260 C300,270 320,260 340,250 C360,240 380,220 400,200 C420,180 440,160 470,170 C500,180 520,210 510,240 C500,270 480,290 460,310 S430,330 400,340 C370,350 350,370 340,390 C330,410 320,440 310,470 S305,520 300,580 Z M320,280 C330,270 340,260 350,250 S370,230 390,220 C410,210 430,190 450,200 S470,220 460,240 C450,260 430,280 410,290 S390,300 370,310 C350,320 330,300 320,280 Z M280,280 C270,270 260,260 250,250 S230,230 210,220 C190,210 170,190 150,200 S130,220 140,240 C150,260 170,280 190,290 S210,300 230,310 C250,320 270,300 280,280 Z"/>
+        </svg>
         <div class="tree-top" id="tree-top"></div>
-        <div class="tree-trunk"></div>
     </div>
     
     <div class="text-overlay" id="text-overlay">
@@ -189,13 +251,24 @@ html_content = """
     const colors = ['#ff0033', '#ff0055', '#ff3377', '#ff6699', '#fb6f92'];
 
     // Configuración de la animación progresiva
-    const TOTAL_HEARTS = 300; // Corazones totales para formar el árbol
+    const TOTAL_HEARTS = 380; // Más corazones para una copa muy frondosa
     const INTERVAL_MS = 100; // Un corazón cada 100ms
-    const TEXT_DELAY_MS = 28000; // Esperar 28 segundos antes de mostrar el texto (ajustable)
+    const TEXT_DELAY_MS = 32000; // Esperar 32 segundos antes de mostrar el texto (ajustable)
 
     let heartsCreated = 0;
 
-    function createHeart() {
+    // --- GEOMETRÍA DEL CORAZÓN (Fórmula Paramétrica) - Recuperada ---
+    const scaleFactor = 14; // Escala del corazón
+    
+    // Función para obtener las coordenadas X e Y en forma de corazón
+    function getHeartPoint(t) {
+        // Fórmula matemática del corazón (ajustada para que esté boca arriba)
+        let x = scaleFactor * (16 * Math.pow(Math.sin(t), 3));
+        let y = -scaleFactor * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        return { x, y };
+    }
+
+    function createTreeHeart() {
         if (heartsCreated >= TOTAL_HEARTS) {
             clearInterval(heartInterval);
             return;
@@ -204,40 +277,55 @@ html_content = """
         const heart = document.createElement('div');
         heart.classList.add('heart-tree');
         
-        // --- LÓGICA DE DISTRIBUCIÓN ESFÉRICA PERFECTA (COPA REDONDA) ---
-        // Radio de la copa (mitad del diámetro de .tree-top)
+        // --- POSICIONAMIENTO DENTRO DEL CORAZÓN ---
+        // 't' va de 0 a 2*PI para trazar el perímetro
+        const t = Math.random() * Math.PI * 2; 
+        const pointPerimetro = getHeartPoint(t);
+        
+        // Para rellenar el interior, multiplicamos por un factor aleatorio (0 a 1)
+        // Usamos Math.sqrt para una distribución más uniforme en el centro
+        const randomRadiusFactor = Math.sqrt(Math.random()); 
+        
+        // Centro de la copa (.tree-top)
+        const centerX = 225; 
+        const centerY = 200; // Ajustado para que el centro del corazón esté bien ubicado
+
+        // Coordenadas Finales acotadas por el factor aleatorio
+        // En el eje Y, el progreso (heartsCreated) nos ayuda a "nacer desde abajo"
+        const progressY = heartsCreated / TOTAL_HEARTS;
+        // yRelativa va de baseY (radius) a -radius. Usamos Math.pow para subir rápido al principio.
+        const baseY = centerY + (scaleFactor * 17); // Punto más bajo del corazón
+        const heightY = (scaleFactor * 34); // Altura total
+        const actualY = baseY - (heightY * Math.pow(progressY, 0.8)); // Crecimiento progresivo
+
+        // Ahora acotamos X según esta Y (x² = r² - y²) - para que sea redondo perfecto
+        const yRelativaCentro = actualY - centerY;
+        // maxRadiusX es la "anchura" máxima en esta Y dentro del corazón paramétrico
+        // Es un cálculo complejo, así que aproximamos con la anchura del corazón en image_8.png
         const radiusCopa = 150; 
-        
-        // Lógica de crecimiento ascendente (nace desde abajo)
-        const currentProgress = heartsCreated / TOTAL_HEARTS; // Valor de 0 a 1
-        
-        // 1. Calculamos la altura (Y) progresivamente, pero dentro de la esfera
-        const baseY = 280; 
-        const heightFactor = 2 * radiusCopa; // Diámetro
-        const y_esfera = (baseY - radiusCopa) + radiusCopa - (heightFactor * currentProgress); 
+        const maxRadiusX_approx = Math.sqrt(Math.pow(radiusCopa, 2) - Math.pow(yRelativaCentro, 2));
 
-        // 2. Calculamos el Radio X Máximo en esta altura Y (Fórmula de la Esfera)
-        const yRelativaCentroEsfera = y_esfera - (baseY - radiusCopa); 
-        const maxRadiusX = Math.sqrt(Math.pow(radiusCopa, 2) - Math.pow(yRelativaCentroEsfera, 2));
+        // Si maxRadiusX_approx no es un número (Y fuera del radio esférico), no dibujamos
+        if (isNaN(maxRadiusX_approx) && progressY < 0.8) {
+             heartsCreated++; // Incrementamos para no quedarnos atascados
+             return;
+        }
 
-        // 3. Posicionamiento Aleatorio Circular pero acotado por maxRadiusX
         const angle = Math.random() * Math.PI * 2;
         
-        // Radio real X se acota para no salir de la esfera
-        const randomRadiusFactor = Math.random() * 0.9; 
-        const actualRadiusX = maxRadiusX * randomRadiusFactor;
+        // Para asegurar que estamos dentro del corazón gigante paramétrico,
+        // acotamos el radio aleatorio por maxRadiusX_approx.
+        // Agregamos un poco de aleatoriedad para naturalidad, pero con maxRadiusX
+        const randomRadiusX_final = Math.random() * Math.max(maxRadiusX_approx, 10) * 0.95; 
         
-        // Coordenadas Finales
-        const x_final = (radiusCopa) + Math.cos(angle) * actualRadiusX; 
-        const y_final = y_esfera;
+        const finalX = centerX + Math.cos(angle) * randomRadiusX_final;
+        const finalY = actualY;
 
-        // --- APLICAMOS COORDENADAS ---
-        heart.style.left = `${x_final}px`;
-        heart.style.top = `${y_final}px`;
+        heart.style.left = `${finalX - 9}px`; // Centramos el corazón (9px is half of 18px)
+        heart.style.top = `${finalY - 9}px`;
         heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         
-        // Tamaño aleatorio para naturalidad
-        const size = Math.random() * 12 + 10;
+        const size = Math.random() * 10 + 14; // Variación de tamaño para naturalidad
         heart.style.width = `${size}px`;
         heart.style.height = `${size}px`;
 
@@ -245,11 +333,38 @@ html_content = """
         heartsCreated++;
     }
 
+    // --- LLUVIA DE CORAZONES DESDE ARRIBA - Recuperada y Mejorada ---
+    function createRainHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-rain');
+        
+        // Posicionamiento horizontal aleatorio por todo el ancho de la pantalla
+        heart.style.left = Math.random() * 100 + 'vw';
+        
+        // Color aleatorio
+        heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Velocidad aleatoria para naturalidad (caída entre 4 y 7 segundos)
+        const fallDuration = Math.random() * 3 + 4;
+        heart.style.animationDuration = `${fallDuration}s`;
+
+        document.body.appendChild(heart);
+
+        // Eliminamos el corazón cuando termina su caída para no saturar la memoria
+        setTimeout(() => {
+            heart.remove();
+        }, fallDuration * 1000);
+    }
+
     // --- INICIAMOS LA CREACIÓN PROGRESIVA DE CORAZONES (EL ÁRBOL NACE) ---
-    // Esperamos 1.5s para que el tronco se muestre primero
+    // Esperamos 2.5s para que se muestre el tronco realista
     setTimeout(() => {
-        const heartInterval = setInterval(createHeart, INTERVAL_MS);
-    }, 1500);
+        const heartInterval = setInterval(createTreeHeart, 80); // Un corazón cada 80ms
+    }, 2500);
+
+    // --- INICIAMOS LA LLUVIA DE CORAZONES - Recuperada y Mejorada ---
+    // Un corazón de lluvia cada 450ms
+    setInterval(createRainHeart, 450);
 
     // --- LÓGICA DEL TEXTO DIFERIDO (LAS LETRAS SALEN AL FINAL) ---
     // Mostramos el texto después del retraso configurado
